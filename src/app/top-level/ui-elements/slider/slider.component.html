@@ -1,0 +1,16 @@
+<mat-card class="example-result-card">
+  <mat-card-content>
+    <div class="example-label-container">
+      <label id="example-name-label" class="example-name-label">Font Weight</label>
+      <label class="example-value-label">{{slider.value}}</label>
+    </div>
+    <mat-slider
+      class="example-margin"
+      [max]="max"
+      [min]="min"
+      [step]="step"
+      [showTickMarks]="showTicks">
+      <input matSliderThumb [(ngModel)]="sliderValue" (ngModelChange)="onSliderChange(sliderValue)" #slider>
+    </mat-slider>
+  </mat-card-content>
+</mat-card>

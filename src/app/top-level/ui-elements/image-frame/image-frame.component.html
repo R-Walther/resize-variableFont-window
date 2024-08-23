@@ -1,0 +1,7 @@
+<img *ngIf="showImage" src="{{imgSource}}" class="draggableImage">
+<button (click)="imgIntention = true">new image</button>
+<form *ngIf="imgIntention && !showImage" (ngSubmit)="onSubmit()" #form="ngForm">
+  <input name="urlInputField" type="url" ngModel placeholder="url">
+  <button type="submit" [disabled]="!form.valid"> ok</button>
+</form>
+
