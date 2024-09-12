@@ -6,9 +6,9 @@
        [style.width.px]="size.w"
        [style.height.px]="size.h">
     <div class="top-bar-wrapper" (mousedown)="startDrag($event)"></div>
-<!--    <ng-content></ng-content>-->
-    <app-image-frame *ngIf="frameType==frameOptions.image"></app-image-frame>
-    <app-text-frame *ngIf="frameType==frameOptions.text" [size]="size" [minSize]="minSize"></app-text-frame>
+<!-- todo   <ng-content></ng-content>-->
+    @if(frameType==FrameOptions.IMAGE) {<app-image-frame />}
+    @if(frameType==FrameOptions.TEXT) {<app-text-frame [size]="size" [minSize]="minSize"/>}
   </div>
   <div class="resizers"
        [style.width.px]="size.w"

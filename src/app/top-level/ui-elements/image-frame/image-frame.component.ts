@@ -1,9 +1,13 @@
 import {Component, ViewChild} from '@angular/core';
-import {NgForm, NgModel} from "@angular/forms";
+import {FormsModule, NgForm} from "@angular/forms";
 
 @Component({
   selector: 'app-image-frame',
   templateUrl: './image-frame.component.html',
+  standalone: true,
+  imports: [
+    FormsModule
+  ],
   styleUrls: ['./image-frame.component.sass']
 })
 export class ImageFrameComponent {

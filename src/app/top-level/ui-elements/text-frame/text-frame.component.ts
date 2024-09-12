@@ -1,7 +1,10 @@
 import {Component, Input} from '@angular/core';
+import {ModifyFrameFillComponent} from "../../modify-frame-fill/modify-frame-fill.component";
 @Component({
   selector: 'app-text-frame',
   templateUrl: './text-frame.component.html',
+  standalone: true,
+  imports: [ModifyFrameFillComponent],
   styleUrls: ['./text-frame.component.sass']
 })
 export class TextFrameComponent {

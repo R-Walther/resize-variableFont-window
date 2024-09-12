@@ -1,5 +1,3 @@
-import {Component, ElementRef, Inject, ViewChild} from '@angular/core';
-import {DOCUMENT} from "@angular/common";
 
 export type ResizeAnchorType =
   | 'top'
@@ -12,22 +10,27 @@ export type ResizeDirectionType =
   | 'y'
   | 'xy';
 
- enum frameOptions
-  {
-    'image',
-    'text'
-  }
+import {Component, ElementRef, Inject, ViewChild} from '@angular/core';
+import {DOCUMENT} from "@angular/common";
+import {FrameOptions} from "../frame-options";
+import {ImageFrameComponent} from "../ui-elements/image-frame/image-frame.component";
+import {TextFrameComponent} from "../ui-elements/text-frame/text-frame.component";
+
 
 @Component({
   selector: 'app-frame-component',
-  templateUrl: './frame-component.component.html',
-  styleUrls: ['./frame-component.component.sass']
+  templateUrl: './frame.component.html',
+  styleUrls: ['./frame.component.sass'],
+  standalone: true,
+  imports: [
+    ImageFrameComponent,
+    TextFrameComponent
+  ]
 })
-
-export class FrameComponentComponent {
+export class FrameComponent {
   @ViewChild('resizeCorner') resizeCornerRef!: ElementRef;
   protected readonly onmousedown = onmousedown;
-  protected frameType : frameOptions = frameOptions.text;
+  protected frameType : FrameOptions = FrameOptions.TEXT;
 
   position: { x: number, y: number } = {x: 100, y: 100};
   size: { w: number, h: number } = {w: 200, h: 200};
@@ -134,5 +137,5 @@ export class FrameComponentComponent {
     this._document.addEventListener('mouseup', finishResize);
   }
 
-  protected readonly frameOptions = frameOptions;
+  protected readonly FrameOptions = FrameOptions;
 }
