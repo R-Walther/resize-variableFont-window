@@ -1,8 +1,8 @@
-<button mat-fab aria-label="Example icon button with a delete icon">
+<button mat-fab aria-label="Example icon button with a delete icon" (click) = "becomeTxtFrame.emit()">
   <mat-icon>text_fields</mat-icon>
   <!--  on first page, choose text type-->
 </button>
-<button mat-fab aria-label="Example icon button with a delete icon">
+<button mat-fab aria-label="Example icon button with a delete icon" (click) = "becomeImageFrame.emit()">
   <mat-icon>add_photo_alternate</mat-icon>
   <!--  on first page, choose image type-->
 </button>
@@ -14,7 +14,9 @@
   <mat-icon>opacity</mat-icon>
   <!--  change background opacity-->
 </button>
-<button mat-fab aria-label="Example icon button with a delete icon">
-  <mat-icon (click)="onClose" >eject</mat-icon>
+<button mat-fab aria-label="Example icon button with a delete icon" (click)="onClose()">
+  <mat-icon  >eject</mat-icon>
 <!--  change canvas type-->
 </button>
+
+<app-slider class="slider" (numberOut)="sliderValueChange($event)"></app-slider>

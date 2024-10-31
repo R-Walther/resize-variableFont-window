@@ -1,6 +1,7 @@
 import {Component, EventEmitter, Output} from '@angular/core';
 import {MatIconModule} from "@angular/material/icon";
 import {MatButtonModule} from "@angular/material/button";
+import {SliderComponent} from "../ui-elements/slider/slider.component";
 
 @Component({
   selector: 'app-modify-frame-fill',
@@ -9,14 +10,20 @@ import {MatButtonModule} from "@angular/material/button";
   standalone: true,
   imports: [
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
+    SliderComponent
   ]
 })
 export class ModifyFrameFillComponent {
   @Output() close = new EventEmitter<void>();
+  @Output() becomeImageFrame = new EventEmitter<void>();
+  @Output() becomeTxtFrame = new EventEmitter<void>();
 
   onClose(){
-    this.close.emit;
-    //todo handle the closing to delete the window in the openWindows array
+    this.close.emit();
+  }
+
+  sliderValueChange($event: any) {
+
   }
 }

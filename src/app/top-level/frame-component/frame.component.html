@@ -4,9 +4,9 @@
   <div #topBar></div>
   <div class="content-wrapper "
        [style.width.px]="size.w"
-       [style.height.px]="size.h">
-    <div class="top-bar-wrapper" (mousedown)="startDrag($event)"></div>
-<!-- todo   <ng-content></ng-content>-->
+       [style.height.px]="size.h"
+       (mousedown)="startDrag($event)">
+<!--    <div class="top-bar-wrapper" ></div>-->
     @if(frameType==FrameOptions.IMAGE) {<app-image-frame />}
     @if(frameType==FrameOptions.TEXT) {<app-text-frame [size]="size" [minSize]="minSize"/>}
   </div>
@@ -22,5 +22,7 @@
     <div (mousedown)="startResize($event, ['bottom','left'], 'xy')" class="resizer bottom-left"></div>
     <div (mousedown)="startResize($event, ['bottom','right'], 'xy')" #resizeCorner class="resizer bottom-right"></div>
   </div>
-  <!--  <app-slider (numberOut)="updateSliderValue($event)"></app-slider>-->
+
+  <app-modify-frame-fill class="frame-options" (close)="destroyThisFrame()" (becomeImageFrame)="frameType = FrameOptions.IMAGE" (becomeTxtFrame)="frameType = FrameOptions.TEXT" ></app-modify-frame-fill>
 </div>
+

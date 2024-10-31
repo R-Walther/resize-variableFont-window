@@ -1,10 +1,11 @@
 import {
   Component,
-  ComponentRef,
+  ComponentRef, ViewChild,
   ViewContainerRef
 } from '@angular/core';
 import {FrameComponent} from "./top-level/frame-component/frame.component";
 import { SelectTypeComponent } from "./top-level/select-type/select-type.component";
+import {FrameControllerService} from "./services/frame-controller.service";
 
 @Component({
   selector: 'app-root',
@@ -17,15 +18,14 @@ import { SelectTypeComponent } from "./top-level/select-type/select-type.compone
   standalone: true
 })
 export class AppComponent{
-  private openWindows: ComponentRef<FrameComponent>[] = [];
-  title = 'VariableFonts';
-  // @ViewChild('frameSpawner', {read: ViewContainerRef}) framespawner: ViewContainerRef | undefined;
 
-  constructor(private viewContainerRef: ViewContainerRef) {
+  title = 'VariableFonts';
+  @ViewChild('frameSpawner', {read: ViewContainerRef}) framespawner: ViewContainerRef | undefined;
+
+  constructor(private viewContainerRef: ViewContainerRef, protected frameController : FrameControllerService) {
   }
 
   spawnCanvas(){
-    const component = this.viewContainerRef.createComponent(FrameComponent);
-    this.openWindows.push(component);
+    this.frameController.createWindow(this.viewContainerRef);
   }
 }

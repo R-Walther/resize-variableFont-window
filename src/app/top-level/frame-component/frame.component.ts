@@ -10,11 +10,13 @@ export type ResizeDirectionType =
   | 'y'
   | 'xy';
 
-import {Component, ElementRef, Inject, ViewChild} from '@angular/core';
+import {Component, ElementRef, Inject, OnInit, ViewChild} from '@angular/core';
 import {DOCUMENT} from "@angular/common";
 import {FrameOptions} from "../frame-options";
 import {ImageFrameComponent} from "../ui-elements/image-frame/image-frame.component";
 import {TextFrameComponent} from "../ui-elements/text-frame/text-frame.component";
+import {FrameControllerService} from "../../services/frame-controller.service";
+import {ModifyFrameFillComponent} from "../modify-frame-fill/modify-frame-fill.component";
 
 
 @Component({
@@ -24,57 +26,65 @@ import {TextFrameComponent} from "../ui-elements/text-frame/text-frame.component
   standalone: true,
   imports: [
     ImageFrameComponent,
-    TextFrameComponent
+    TextFrameComponent,
+    ModifyFrameFillComponent
   ]
 })
-export class FrameComponent {
+export class FrameComponent implements OnInit{
   @ViewChild('resizeCorner') resizeCornerRef!: ElementRef;
   protected readonly onmousedown = onmousedown;
   protected frameType : FrameOptions = FrameOptions.TEXT;
+  protected readonly FrameOptions = FrameOptions;
 
-  position: { x: number, y: number } = {x: 100, y: 100};
-  size: { w: number, h: number } = {w: 200, h: 200};
-  lastPosition: { x: number, y: number };
-  lastSize: { w: number, h: number };
-  minSize: { w: number, h: number } = {w: 200, h: 200};
-  maxSize: { w: number, h: number } = {w: 600, h: 600};
+  protected position: { x: number, y: number } = {x: 100, y: 100};
+  protected size: { w: number, h: number } = {w: 200, h: 200};
+  protected lastPosition: { x: number, y: number };
+  protected lastSize: { w: number, h: number };
+  protected minSize: { w: number, h: number } = {w: 200, h: 200};
+  protected maxSize: { w: number, h: number } = {w: 600, h: 600};
 
+  private windowID: number | undefined;
 
   constructor(
     @Inject(DOCUMENT) private _document: Document,
-    private _el: ElementRef) {
+    protected frameController: FrameControllerService
+    ) {
     this.lastPosition = this.position;
     this.lastSize = this.size;
   }
 
+  ngOnInit() {
+        this.windowID = this.frameController.getLastID();
+    console.log(this.windowID);
+  }
 
+  startDrag($event: MouseEvent): void {
+    if (!($event.target as HTMLElement).closest('input')) {
+      $event.preventDefault(); // override anticipated functionality for our mouse event
+      //capture the mouse X and Y positions
+      const mouseX = $event.clientX;
+      const mouseY = $event.clientY;
 
-  startDrag($event: { preventDefault: () => void; clientX: any; clientY: any; }): void {
+      const positionX = this.position.x;
+      const positionY = this.position.y;
 
-    $event.preventDefault(); // override anticipated functionality for our mouse event
-    //capture the mouse X and Y positions
-    const mouseX = $event.clientX;
-    const mouseY = $event.clientY;
+      //internal functions
+      const duringDrag = (e: { clientX: number; clientY: number; }) => {
+        const dx = e.clientX - mouseX;
+        const dy = e.clientY - mouseY;
+        this.position.x = positionX + dx;
+        this.position.y = positionY + dy;
+        this.lastPosition = {...this.position};
+      };
 
-    const positionX = this.position.x;
-    const positionY = this.position.y;
+      const finishDrag = () => {
+        this._document.removeEventListener('mousemove', duringDrag);
+        this._document.removeEventListener('mouseup', finishDrag);
+      };
 
-    //internal functions
-    const duringDrag = (e: { clientX: number; clientY: number; }) => {
-      const dx = e.clientX - mouseX;
-      const dy = e.clientY - mouseY;
-      this.position.x = positionX + dx;
-      this.position.y = positionY + dy;
-      this.lastPosition = {...this.position};
-    };
-
-    const finishDrag = () => {
-      this._document.removeEventListener('mousemove', duringDrag);
-      this._document.removeEventListener('mouseup', finishDrag);
-    };
-
-    this._document.addEventListener('mousemove', duringDrag);
-    this._document.addEventListener('mouseup', finishDrag);
+      this._document.addEventListener('mousemove', duringDrag);
+      this._document.addEventListener('mouseup', finishDrag);
+    }
   }
 
   startResize($event: {
@@ -111,7 +121,6 @@ export class FrameComponent {
       if (anchors.includes('left')) {
         this.position.x = lastX + e.clientX - mouseX;
         this.size.w = Math.max(dw, this.minSize.w);
-        console.log("size w: " + this.size.w);
       }
 
       if (anchors.includes('top')) {
@@ -136,6 +145,11 @@ export class FrameComponent {
     this._document.addEventListener('mousemove', duringResize);
     this._document.addEventListener('mouseup', finishResize);
   }
-
-  protected readonly FrameOptions = FrameOptions;
+  protected destroyThisFrame(): void{
+    if(this.windowID){
+        this.frameController.removeWindow(this.windowID-1);
+    }
+    else
+      console.log('there is no windowID');
+  }
 }
